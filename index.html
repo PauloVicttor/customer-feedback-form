@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Pesquisa de Satisfação | Suporte Lua</title>
+
+<link rel="stylesheet" href="style.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+
+</head>
+<body>
+
+<div class="topbar"></div>
+
+<section class="hero">
+
+<div class="brand">
+ PESQUISA DE SATISFAÇÃO SUPORTE LUA ✈ 
+</div>
+
+<h1>Como foi sua experiência?</h1>
+
+<p>
+Sua opinião contribui para reconhecer excelentes atendimentos e melhorar continuamente nosso atendimento.
+</p>
+
+<div class="meta">
+4 perguntas • menos de 1 minuto
+</div>
+
+</section>
+
+<div class="wrapper">
+
+<div class="card">
+
+<form id="feedbackForm">
+
+<div class="section">
+
+<div class="section-title">
+Avaliação Geral
+</div>
+
+<h2>Como foi o atendimento?</h2>
+
+<div class="rating">
+
+<label class="rate">
+<input type="radio" name="nota" value="5" required>
+<span class="face">😍</span>
+<div class="label">Excelente</div>
+<div class="indicator"></div>
+</label>
+
+<label class="rate">
+<input type="radio" name="nota" value="4">
+<span class="face">😊</span>
+<div class="label">Muito Bom</div>
+<div class="indicator"></div>
+</label>
+
+<label class="rate">
+<input type="radio" name="nota" value="3">
+<span class="face">🙂</span>
+<div class="label">Bom</div>
+<div class="indicator"></div>
+</label>
+
+<label class="rate">
+<input type="radio" name="nota" value="2">
+<span class="face">😐</span>
+<div class="label">Regular</div>
+<div class="indicator"></div>
+</label>
+
+<label class="rate">
+<input type="radio" name="nota" value="1">
+<span class="face">😕</span>
+<div class="label">Ruim</div>
+<div class="indicator"></div>
+</label>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="grid">
+
+<div class="box">
+
+<h3>O atendimento foi cordial?</h3>
+
+<div class="chips">
+
+<input id="cord1" name="cordialidade" type="radio" value="Sim">
+<label for="cord1">Sim</label>
+
+<input id="cord2" name="cordialidade" type="radio" value="Não">
+<label for="cord2">Não</label>
+
+</div>
+
+</div>
+
+<div class="box">
+
+<h3>Seu problema foi resolvido?</h3>
+
+<div class="chips">
+
+<input id="res1" name="resolucao" type="radio" value="Resolvido">
+<label for="res1">Resolvido</label>
+
+<input id="res2" name="resolucao" type="radio" value="Parcialmente">
+<label for="res2">Parcialmente</label>
+
+<input id="res3" name="resolucao" type="radio" value="Não resolvido">
+<label for="res3">Não resolvido</label>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+Operador
+</div>
+
+<h2>Quem realizou o atendimento?</h2>
+
+<div class="field">
+
+<select id="operador" required>
+
+<option value="">
+Selecione o operador
+</option>
+
+<option>João Silva</option>
+<option>Ana Costa</option>
+<option>Carlos Mendes</option>
+<option>Patrícia Oliveira</option>
+
+</select>
+
+</div>
+
+</div>
+
+<div class="section">
+
+<div class="section-title">
+Comentário
+</div>
+
+<h2>Gostaria de compartilhar mais detalhes?</h2>
+
+<div class="field">
+
+<textarea
+id="comentario"
+placeholder="Comentário opcional"></textarea>
+
+</div>
+
+</div>
+
+<div class="actions">
+
+<div class="help">
+Obrigado por compartilhar sua opinião.
+</div>
+
+<button type="submit">
+Finalizar avaliação →
+</button>
+
+</div>
+
+<div class="success" id="success">
+✅ Avaliação enviada com sucesso.
+</div>
+
+</form>
+
+</div>
+
+</div>
+
+<script>
+
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUyFUCHnaQgGpsl3uL9dgH7-3hgnNr1Lk9S5h3I_Aj1bRhgFSguAAHPsOfn61QRVo4/exec";
+
+document.getElementById("feedbackForm")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    const nota =
+        document.querySelector('input[name="nota"]:checked')?.value;
+
+    const cordialidade =
+        document.querySelector('input[name="cordialidade"]:checked')?.value || "";
+
+    const resolucao =
+        document.querySelector('input[name="resolucao"]:checked')?.value || "";
+
+    const operador =
+        document.getElementById("operador").value;
+
+    const comentario =
+        document.getElementById("comentario").value;
+
+    const payload = {
+
+        data: new Date().toLocaleString("pt-BR"),
+
+        operador: operador,
+
+        nota: nota,
+
+        cordialidade: cordialidade,
+
+        resolucao: resolucao,
+
+        comentario: comentario
+
+    };
+
+    try {
+
+    await fetch(SCRIPT_URL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+            "Content-Type": "text/plain"
+        },
+        body: JSON.stringify(payload)
+    });
+
+    document.getElementById("success").style.display = "block";
+
+    document.getElementById("feedbackForm").reset();
+
+    window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+    });
+
+} catch(error){
+
+    console.error(error);
+
+    alert("Erro ao enviar avaliação.");
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
